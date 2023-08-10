@@ -1,0 +1,729 @@
+Bezużyteczne reguły w analizatorze z powodu konfliktów
+
+    6 wyrazenie: ZNAK
+
+
+Stan 2 konflikty: 1 przesunięcie/redukcja
+Stan 10 konflikty: 7 redukcja/redukcja
+Stan 11 konflikty: 1 przesunięcie/redukcja
+Stan 12 konflikty: 1 przesunięcie/redukcja
+Stan 18 konflikty: 1 przesunięcie/redukcja
+Stan 21 konflikty: 1 przesunięcie/redukcja
+Stan 22 konflikty: 1 przesunięcie/redukcja
+Stan 23 konflikty: 1 przesunięcie/redukcja
+Stan 24 konflikty: 1 przesunięcie/redukcja
+Stan 25 konflikty: 1 przesunięcie/redukcja
+Stan 35 konflikty: 5 przesunięcie/redukcja
+
+
+Gramatyka
+
+    0 $accept: program $end
+
+    1 program: program wyrazenie '\n'
+    2        | error '\n'
+    3        | %empty
+
+    4 wyrazenie: LICZBA
+    5          | ZNAK
+    6          | ZNAK
+    7          | ZNAK '=' wyrazenie
+    8          | wyrazenie '+' wyrazenie
+    9          | wyrazenie '-' wyrazenie
+   10          | '(' wyrazenie ')'
+   11          | wyrazenie '*' wyrazenie
+   12          | wyrazenie '^' wyrazenie
+   13          | '-' wyrazenie
+   14          | MAX '(' param_max ')'
+   15          | MIN '(' param_min ')'
+   16          | MEAN '(' param_mean ')'
+   17          | MEDIAN '(' param_median ')'
+   18          | wyrazenie '/' wyrazenie
+   19          | %empty
+
+   20 param_max: LICZBA
+   21          | param_max ',' LICZBA
+   22          | %empty
+
+   23 param_min: LICZBA
+   24          | param_min ',' LICZBA
+   25          | %empty
+
+   26 param_mean: LICZBA
+   27           | param_mean ',' LICZBA
+   28           | %empty
+
+   29 param_median: LICZBA
+   30             | param_median ',' LICZBA
+   31             | %empty
+
+
+Symbole terminalne i reguły, w których występują
+
+$end (0) 0
+'\n' (10) 1 2
+'(' (40) 10 14 15 16 17
+')' (41) 10 14 15 16 17
+'*' (42) 11
+'+' (43) 8
+',' (44) 21 24 27 30
+'-' (45) 9 13
+'/' (47) 18
+'=' (61) 7
+'^' (94) 12
+error (256) 2
+MAX (258) 14
+MEAN (259) 16
+MIN (260) 15
+MEDIAN (261) 17
+LICZBA (262) 4 20 21 23 24 26 27 29 30
+ZNAK (263) 5 6 7
+NEG (264)
+
+
+Symbole nieterminalne i reguły, w których występują
+
+$accept (20)
+    po lewej: 0
+program (21)
+    po lewej: 1 2 3, po prawej: 0 1
+wyrazenie (22)
+    po lewej: 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19, po prawej:
+    1 7 8 9 10 11 12 13 18
+param_max (23)
+    po lewej: 20 21 22, po prawej: 14 21
+param_min (24)
+    po lewej: 23 24 25, po prawej: 15 24
+param_mean (25)
+    po lewej: 26 27 28, po prawej: 16 27
+param_median (26)
+    po lewej: 29 30 31, po prawej: 17 30
+
+
+Stan 0
+
+    0 $accept: . program $end
+
+    error  przesunięcie, i przejście do stanu 1
+
+    $end    redukcja przy użyciu reguły 3 (program)
+    MAX     redukcja przy użyciu reguły 3 (program)
+    MEAN    redukcja przy użyciu reguły 3 (program)
+    MIN     redukcja przy użyciu reguły 3 (program)
+    MEDIAN  redukcja przy użyciu reguły 3 (program)
+    LICZBA  redukcja przy użyciu reguły 3 (program)
+    ZNAK    redukcja przy użyciu reguły 3 (program)
+    '+'     redukcja przy użyciu reguły 3 (program)
+    '-'     redukcja przy użyciu reguły 3 (program)
+    '*'     redukcja przy użyciu reguły 3 (program)
+    '/'     redukcja przy użyciu reguły 3 (program)
+    '^'     redukcja przy użyciu reguły 3 (program)
+    '\n'    redukcja przy użyciu reguły 3 (program)
+    '('     redukcja przy użyciu reguły 3 (program)
+
+    program  przejście do stanu 2
+
+
+Stan 1
+
+    2 program: error . '\n'
+
+    '\n'  przesunięcie, i przejście do stanu 3
+
+
+Stan 2
+
+    0 $accept: program . $end
+    1 program: program . wyrazenie '\n'
+
+    $end    przesunięcie, i przejście do stanu 4
+    MAX     przesunięcie, i przejście do stanu 5
+    MEAN    przesunięcie, i przejście do stanu 6
+    MIN     przesunięcie, i przejście do stanu 7
+    MEDIAN  przesunięcie, i przejście do stanu 8
+    LICZBA  przesunięcie, i przejście do stanu 9
+    ZNAK    przesunięcie, i przejście do stanu 10
+    '-'     przesunięcie, i przejście do stanu 11
+    '('     przesunięcie, i przejście do stanu 12
+
+    '-'          [redukcja przy użyciu reguły 19 (wyrazenie)]
+    $domyślnie  redukcja przy użyciu reguły 19 (wyrazenie)
+
+    wyrazenie  przejście do stanu 13
+
+
+Stan 3
+
+    2 program: error '\n' .
+
+    $domyślnie  redukcja przy użyciu reguły 2 (program)
+
+
+Stan 4
+
+    0 $accept: program $end .
+
+    $domyślnie  akceptowanie
+
+
+Stan 5
+
+   14 wyrazenie: MAX . '(' param_max ')'
+
+    '('  przesunięcie, i przejście do stanu 14
+
+
+Stan 6
+
+   16 wyrazenie: MEAN . '(' param_mean ')'
+
+    '('  przesunięcie, i przejście do stanu 15
+
+
+Stan 7
+
+   15 wyrazenie: MIN . '(' param_min ')'
+
+    '('  przesunięcie, i przejście do stanu 16
+
+
+Stan 8
+
+   17 wyrazenie: MEDIAN . '(' param_median ')'
+
+    '('  przesunięcie, i przejście do stanu 17
+
+
+Stan 9
+
+    4 wyrazenie: LICZBA .
+
+    $domyślnie  redukcja przy użyciu reguły 4 (wyrazenie)
+
+
+Stan 10
+
+    5 wyrazenie: ZNAK .
+    6          | ZNAK .
+    7          | ZNAK . '=' wyrazenie
+
+    '='  przesunięcie, i przejście do stanu 18
+
+    '+'          redukcja przy użyciu reguły 5 (wyrazenie)
+    '+'          [redukcja przy użyciu reguły 6 (wyrazenie)]
+    '-'          redukcja przy użyciu reguły 5 (wyrazenie)
+    '-'          [redukcja przy użyciu reguły 6 (wyrazenie)]
+    '*'          redukcja przy użyciu reguły 5 (wyrazenie)
+    '*'          [redukcja przy użyciu reguły 6 (wyrazenie)]
+    '/'          redukcja przy użyciu reguły 5 (wyrazenie)
+    '/'          [redukcja przy użyciu reguły 6 (wyrazenie)]
+    '^'          redukcja przy użyciu reguły 5 (wyrazenie)
+    '^'          [redukcja przy użyciu reguły 6 (wyrazenie)]
+    '\n'         redukcja przy użyciu reguły 5 (wyrazenie)
+    '\n'         [redukcja przy użyciu reguły 6 (wyrazenie)]
+    ')'          redukcja przy użyciu reguły 5 (wyrazenie)
+    ')'          [redukcja przy użyciu reguły 6 (wyrazenie)]
+    $domyślnie  redukcja przy użyciu reguły 5 (wyrazenie)
+
+
+Stan 11
+
+   13 wyrazenie: '-' . wyrazenie
+
+    MAX     przesunięcie, i przejście do stanu 5
+    MEAN    przesunięcie, i przejście do stanu 6
+    MIN     przesunięcie, i przejście do stanu 7
+    MEDIAN  przesunięcie, i przejście do stanu 8
+    LICZBA  przesunięcie, i przejście do stanu 9
+    ZNAK    przesunięcie, i przejście do stanu 10
+    '-'     przesunięcie, i przejście do stanu 11
+    '('     przesunięcie, i przejście do stanu 12
+
+    '-'          [redukcja przy użyciu reguły 19 (wyrazenie)]
+    $domyślnie  redukcja przy użyciu reguły 19 (wyrazenie)
+
+    wyrazenie  przejście do stanu 19
+
+
+Stan 12
+
+   10 wyrazenie: '(' . wyrazenie ')'
+
+    MAX     przesunięcie, i przejście do stanu 5
+    MEAN    przesunięcie, i przejście do stanu 6
+    MIN     przesunięcie, i przejście do stanu 7
+    MEDIAN  przesunięcie, i przejście do stanu 8
+    LICZBA  przesunięcie, i przejście do stanu 9
+    ZNAK    przesunięcie, i przejście do stanu 10
+    '-'     przesunięcie, i przejście do stanu 11
+    '('     przesunięcie, i przejście do stanu 12
+
+    '-'          [redukcja przy użyciu reguły 19 (wyrazenie)]
+    $domyślnie  redukcja przy użyciu reguły 19 (wyrazenie)
+
+    wyrazenie  przejście do stanu 20
+
+
+Stan 13
+
+    1 program: program wyrazenie . '\n'
+    8 wyrazenie: wyrazenie . '+' wyrazenie
+    9          | wyrazenie . '-' wyrazenie
+   11          | wyrazenie . '*' wyrazenie
+   12          | wyrazenie . '^' wyrazenie
+   18          | wyrazenie . '/' wyrazenie
+
+    '+'   przesunięcie, i przejście do stanu 21
+    '-'   przesunięcie, i przejście do stanu 22
+    '*'   przesunięcie, i przejście do stanu 23
+    '/'   przesunięcie, i przejście do stanu 24
+    '^'   przesunięcie, i przejście do stanu 25
+    '\n'  przesunięcie, i przejście do stanu 26
+
+
+Stan 14
+
+   14 wyrazenie: MAX '(' . param_max ')'
+
+    LICZBA  przesunięcie, i przejście do stanu 27
+
+    $domyślnie  redukcja przy użyciu reguły 22 (param_max)
+
+    param_max  przejście do stanu 28
+
+
+Stan 15
+
+   16 wyrazenie: MEAN '(' . param_mean ')'
+
+    LICZBA  przesunięcie, i przejście do stanu 29
+
+    $domyślnie  redukcja przy użyciu reguły 28 (param_mean)
+
+    param_mean  przejście do stanu 30
+
+
+Stan 16
+
+   15 wyrazenie: MIN '(' . param_min ')'
+
+    LICZBA  przesunięcie, i przejście do stanu 31
+
+    $domyślnie  redukcja przy użyciu reguły 25 (param_min)
+
+    param_min  przejście do stanu 32
+
+
+Stan 17
+
+   17 wyrazenie: MEDIAN '(' . param_median ')'
+
+    LICZBA  przesunięcie, i przejście do stanu 33
+
+    $domyślnie  redukcja przy użyciu reguły 31 (param_median)
+
+    param_median  przejście do stanu 34
+
+
+Stan 18
+
+    7 wyrazenie: ZNAK '=' . wyrazenie
+
+    MAX     przesunięcie, i przejście do stanu 5
+    MEAN    przesunięcie, i przejście do stanu 6
+    MIN     przesunięcie, i przejście do stanu 7
+    MEDIAN  przesunięcie, i przejście do stanu 8
+    LICZBA  przesunięcie, i przejście do stanu 9
+    ZNAK    przesunięcie, i przejście do stanu 10
+    '-'     przesunięcie, i przejście do stanu 11
+    '('     przesunięcie, i przejście do stanu 12
+
+    '-'          [redukcja przy użyciu reguły 19 (wyrazenie)]
+    $domyślnie  redukcja przy użyciu reguły 19 (wyrazenie)
+
+    wyrazenie  przejście do stanu 35
+
+
+Stan 19
+
+    8 wyrazenie: wyrazenie . '+' wyrazenie
+    9          | wyrazenie . '-' wyrazenie
+   11          | wyrazenie . '*' wyrazenie
+   12          | wyrazenie . '^' wyrazenie
+   13          | '-' wyrazenie .
+   18          | wyrazenie . '/' wyrazenie
+
+    '^'  przesunięcie, i przejście do stanu 25
+
+    $domyślnie  redukcja przy użyciu reguły 13 (wyrazenie)
+
+
+Stan 20
+
+    8 wyrazenie: wyrazenie . '+' wyrazenie
+    9          | wyrazenie . '-' wyrazenie
+   10          | '(' wyrazenie . ')'
+   11          | wyrazenie . '*' wyrazenie
+   12          | wyrazenie . '^' wyrazenie
+   18          | wyrazenie . '/' wyrazenie
+
+    '+'  przesunięcie, i przejście do stanu 21
+    '-'  przesunięcie, i przejście do stanu 22
+    '*'  przesunięcie, i przejście do stanu 23
+    '/'  przesunięcie, i przejście do stanu 24
+    '^'  przesunięcie, i przejście do stanu 25
+    ')'  przesunięcie, i przejście do stanu 36
+
+
+Stan 21
+
+    8 wyrazenie: wyrazenie '+' . wyrazenie
+
+    MAX     przesunięcie, i przejście do stanu 5
+    MEAN    przesunięcie, i przejście do stanu 6
+    MIN     przesunięcie, i przejście do stanu 7
+    MEDIAN  przesunięcie, i przejście do stanu 8
+    LICZBA  przesunięcie, i przejście do stanu 9
+    ZNAK    przesunięcie, i przejście do stanu 10
+    '-'     przesunięcie, i przejście do stanu 11
+    '('     przesunięcie, i przejście do stanu 12
+
+    '-'          [redukcja przy użyciu reguły 19 (wyrazenie)]
+    $domyślnie  redukcja przy użyciu reguły 19 (wyrazenie)
+
+    wyrazenie  przejście do stanu 37
+
+
+Stan 22
+
+    9 wyrazenie: wyrazenie '-' . wyrazenie
+
+    MAX     przesunięcie, i przejście do stanu 5
+    MEAN    przesunięcie, i przejście do stanu 6
+    MIN     przesunięcie, i przejście do stanu 7
+    MEDIAN  przesunięcie, i przejście do stanu 8
+    LICZBA  przesunięcie, i przejście do stanu 9
+    ZNAK    przesunięcie, i przejście do stanu 10
+    '-'     przesunięcie, i przejście do stanu 11
+    '('     przesunięcie, i przejście do stanu 12
+
+    '-'          [redukcja przy użyciu reguły 19 (wyrazenie)]
+    $domyślnie  redukcja przy użyciu reguły 19 (wyrazenie)
+
+    wyrazenie  przejście do stanu 38
+
+
+Stan 23
+
+   11 wyrazenie: wyrazenie '*' . wyrazenie
+
+    MAX     przesunięcie, i przejście do stanu 5
+    MEAN    przesunięcie, i przejście do stanu 6
+    MIN     przesunięcie, i przejście do stanu 7
+    MEDIAN  przesunięcie, i przejście do stanu 8
+    LICZBA  przesunięcie, i przejście do stanu 9
+    ZNAK    przesunięcie, i przejście do stanu 10
+    '-'     przesunięcie, i przejście do stanu 11
+    '('     przesunięcie, i przejście do stanu 12
+
+    '-'          [redukcja przy użyciu reguły 19 (wyrazenie)]
+    $domyślnie  redukcja przy użyciu reguły 19 (wyrazenie)
+
+    wyrazenie  przejście do stanu 39
+
+
+Stan 24
+
+   18 wyrazenie: wyrazenie '/' . wyrazenie
+
+    MAX     przesunięcie, i przejście do stanu 5
+    MEAN    przesunięcie, i przejście do stanu 6
+    MIN     przesunięcie, i przejście do stanu 7
+    MEDIAN  przesunięcie, i przejście do stanu 8
+    LICZBA  przesunięcie, i przejście do stanu 9
+    ZNAK    przesunięcie, i przejście do stanu 10
+    '-'     przesunięcie, i przejście do stanu 11
+    '('     przesunięcie, i przejście do stanu 12
+
+    '-'          [redukcja przy użyciu reguły 19 (wyrazenie)]
+    $domyślnie  redukcja przy użyciu reguły 19 (wyrazenie)
+
+    wyrazenie  przejście do stanu 40
+
+
+Stan 25
+
+   12 wyrazenie: wyrazenie '^' . wyrazenie
+
+    MAX     przesunięcie, i przejście do stanu 5
+    MEAN    przesunięcie, i przejście do stanu 6
+    MIN     przesunięcie, i przejście do stanu 7
+    MEDIAN  przesunięcie, i przejście do stanu 8
+    LICZBA  przesunięcie, i przejście do stanu 9
+    ZNAK    przesunięcie, i przejście do stanu 10
+    '-'     przesunięcie, i przejście do stanu 11
+    '('     przesunięcie, i przejście do stanu 12
+
+    '-'          [redukcja przy użyciu reguły 19 (wyrazenie)]
+    $domyślnie  redukcja przy użyciu reguły 19 (wyrazenie)
+
+    wyrazenie  przejście do stanu 41
+
+
+Stan 26
+
+    1 program: program wyrazenie '\n' .
+
+    $domyślnie  redukcja przy użyciu reguły 1 (program)
+
+
+Stan 27
+
+   20 param_max: LICZBA .
+
+    $domyślnie  redukcja przy użyciu reguły 20 (param_max)
+
+
+Stan 28
+
+   14 wyrazenie: MAX '(' param_max . ')'
+   21 param_max: param_max . ',' LICZBA
+
+    ')'  przesunięcie, i przejście do stanu 42
+    ','  przesunięcie, i przejście do stanu 43
+
+
+Stan 29
+
+   26 param_mean: LICZBA .
+
+    $domyślnie  redukcja przy użyciu reguły 26 (param_mean)
+
+
+Stan 30
+
+   16 wyrazenie: MEAN '(' param_mean . ')'
+   27 param_mean: param_mean . ',' LICZBA
+
+    ')'  przesunięcie, i przejście do stanu 44
+    ','  przesunięcie, i przejście do stanu 45
+
+
+Stan 31
+
+   23 param_min: LICZBA .
+
+    $domyślnie  redukcja przy użyciu reguły 23 (param_min)
+
+
+Stan 32
+
+   15 wyrazenie: MIN '(' param_min . ')'
+   24 param_min: param_min . ',' LICZBA
+
+    ')'  przesunięcie, i przejście do stanu 46
+    ','  przesunięcie, i przejście do stanu 47
+
+
+Stan 33
+
+   29 param_median: LICZBA .
+
+    $domyślnie  redukcja przy użyciu reguły 29 (param_median)
+
+
+Stan 34
+
+   17 wyrazenie: MEDIAN '(' param_median . ')'
+   30 param_median: param_median . ',' LICZBA
+
+    ')'  przesunięcie, i przejście do stanu 48
+    ','  przesunięcie, i przejście do stanu 49
+
+
+Stan 35
+
+    7 wyrazenie: ZNAK '=' wyrazenie .
+    8          | wyrazenie . '+' wyrazenie
+    9          | wyrazenie . '-' wyrazenie
+   11          | wyrazenie . '*' wyrazenie
+   12          | wyrazenie . '^' wyrazenie
+   18          | wyrazenie . '/' wyrazenie
+
+    '+'  przesunięcie, i przejście do stanu 21
+    '-'  przesunięcie, i przejście do stanu 22
+    '*'  przesunięcie, i przejście do stanu 23
+    '/'  przesunięcie, i przejście do stanu 24
+    '^'  przesunięcie, i przejście do stanu 25
+
+    '+'          [redukcja przy użyciu reguły 7 (wyrazenie)]
+    '-'          [redukcja przy użyciu reguły 7 (wyrazenie)]
+    '*'          [redukcja przy użyciu reguły 7 (wyrazenie)]
+    '/'          [redukcja przy użyciu reguły 7 (wyrazenie)]
+    '^'          [redukcja przy użyciu reguły 7 (wyrazenie)]
+    $domyślnie  redukcja przy użyciu reguły 7 (wyrazenie)
+
+
+Stan 36
+
+   10 wyrazenie: '(' wyrazenie ')' .
+
+    $domyślnie  redukcja przy użyciu reguły 10 (wyrazenie)
+
+
+Stan 37
+
+    8 wyrazenie: wyrazenie . '+' wyrazenie
+    8          | wyrazenie '+' wyrazenie .
+    9          | wyrazenie . '-' wyrazenie
+   11          | wyrazenie . '*' wyrazenie
+   12          | wyrazenie . '^' wyrazenie
+   18          | wyrazenie . '/' wyrazenie
+
+    '*'  przesunięcie, i przejście do stanu 23
+    '/'  przesunięcie, i przejście do stanu 24
+    '^'  przesunięcie, i przejście do stanu 25
+
+    $domyślnie  redukcja przy użyciu reguły 8 (wyrazenie)
+
+
+Stan 38
+
+    8 wyrazenie: wyrazenie . '+' wyrazenie
+    9          | wyrazenie . '-' wyrazenie
+    9          | wyrazenie '-' wyrazenie .
+   11          | wyrazenie . '*' wyrazenie
+   12          | wyrazenie . '^' wyrazenie
+   18          | wyrazenie . '/' wyrazenie
+
+    '*'  przesunięcie, i przejście do stanu 23
+    '/'  przesunięcie, i przejście do stanu 24
+    '^'  przesunięcie, i przejście do stanu 25
+
+    $domyślnie  redukcja przy użyciu reguły 9 (wyrazenie)
+
+
+Stan 39
+
+    8 wyrazenie: wyrazenie . '+' wyrazenie
+    9          | wyrazenie . '-' wyrazenie
+   11          | wyrazenie . '*' wyrazenie
+   11          | wyrazenie '*' wyrazenie .
+   12          | wyrazenie . '^' wyrazenie
+   18          | wyrazenie . '/' wyrazenie
+
+    '^'  przesunięcie, i przejście do stanu 25
+
+    $domyślnie  redukcja przy użyciu reguły 11 (wyrazenie)
+
+
+Stan 40
+
+    8 wyrazenie: wyrazenie . '+' wyrazenie
+    9          | wyrazenie . '-' wyrazenie
+   11          | wyrazenie . '*' wyrazenie
+   12          | wyrazenie . '^' wyrazenie
+   18          | wyrazenie . '/' wyrazenie
+   18          | wyrazenie '/' wyrazenie .
+
+    '^'  przesunięcie, i przejście do stanu 25
+
+    $domyślnie  redukcja przy użyciu reguły 18 (wyrazenie)
+
+
+Stan 41
+
+    8 wyrazenie: wyrazenie . '+' wyrazenie
+    9          | wyrazenie . '-' wyrazenie
+   11          | wyrazenie . '*' wyrazenie
+   12          | wyrazenie . '^' wyrazenie
+   12          | wyrazenie '^' wyrazenie .
+   18          | wyrazenie . '/' wyrazenie
+
+    '^'  przesunięcie, i przejście do stanu 25
+
+    $domyślnie  redukcja przy użyciu reguły 12 (wyrazenie)
+
+
+Stan 42
+
+   14 wyrazenie: MAX '(' param_max ')' .
+
+    $domyślnie  redukcja przy użyciu reguły 14 (wyrazenie)
+
+
+Stan 43
+
+   21 param_max: param_max ',' . LICZBA
+
+    LICZBA  przesunięcie, i przejście do stanu 50
+
+
+Stan 44
+
+   16 wyrazenie: MEAN '(' param_mean ')' .
+
+    $domyślnie  redukcja przy użyciu reguły 16 (wyrazenie)
+
+
+Stan 45
+
+   27 param_mean: param_mean ',' . LICZBA
+
+    LICZBA  przesunięcie, i przejście do stanu 51
+
+
+Stan 46
+
+   15 wyrazenie: MIN '(' param_min ')' .
+
+    $domyślnie  redukcja przy użyciu reguły 15 (wyrazenie)
+
+
+Stan 47
+
+   24 param_min: param_min ',' . LICZBA
+
+    LICZBA  przesunięcie, i przejście do stanu 52
+
+
+Stan 48
+
+   17 wyrazenie: MEDIAN '(' param_median ')' .
+
+    $domyślnie  redukcja przy użyciu reguły 17 (wyrazenie)
+
+
+Stan 49
+
+   30 param_median: param_median ',' . LICZBA
+
+    LICZBA  przesunięcie, i przejście do stanu 53
+
+
+Stan 50
+
+   21 param_max: param_max ',' LICZBA .
+
+    $domyślnie  redukcja przy użyciu reguły 21 (param_max)
+
+
+Stan 51
+
+   27 param_mean: param_mean ',' LICZBA .
+
+    $domyślnie  redukcja przy użyciu reguły 27 (param_mean)
+
+
+Stan 52
+
+   24 param_min: param_min ',' LICZBA .
+
+    $domyślnie  redukcja przy użyciu reguły 24 (param_min)
+
+
+Stan 53
+
+   30 param_median: param_median ',' LICZBA .
+
+    $domyślnie  redukcja przy użyciu reguły 30 (param_median)

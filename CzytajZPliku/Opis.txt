@@ -1,0 +1,11 @@
+Tworz¹c dokumenty w Latex mo¿liwe jest ³¹czenie wielu plików za pomoc¹ komendy \inlcude{œcie¿ka_do_pliku}. Napisz program, który bêdzie zlicza³ statystyki uwzglêdniaj¹ce:
+- liczbê do³¹czonych plików
+- liczbê s³ów
+- liczbê zdañ
+- liczbê paragrafów ( w Latex jako nowy paragraf uznawany jest tekst, przed którym pojawiaj¹ siê co najmniej dwa znaki koñca linii nastêpuj¹ce po sobie.
+- statystyki nie powinny uwzglêdniaæ tekstó zawartych w komentarzach. Komentarze s¹ jedno liniowe, rozpoczyna je symbol %.
+- statystyki nie powinny równie¿ uwzglêdniaæ tekstu miêdzy nastêpuj¹cymi komendami:
+\begin{dowolne litery}
+tutaj mo¿e byæ dowolny znak
+\end{dowolne litery}
+- program po zakoñczeniu pracy powinien wydrukowaæ statystyki. W trakcie pracy nie powinny zostaæ wypisane ¯ADNE znaki na ekranie.
